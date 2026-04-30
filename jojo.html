@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Sweet Jojo</title>
+    <style>
+        body { margin: 0; background: #000; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; color: white; text-align: center; font-family: 'Arial', sans-serif; }
+        .content { position: relative; z-index: 10; width: 100%; }
+        h1 { font-size: 3.5rem; font-weight: bold; text-shadow: 0 0 10px #f00, 0 0 20px #f00, 0 0 40px #f00; margin-bottom: 20px; }
+        #lyrics { font-size: 2.8rem; font-weight: bold; text-shadow: 0 0 15px #f00, 0 0 30px #f00; min-height: 80px; margin-top: 20px; color: #ffcccc; }
+        button { background: #ff0000; color: white; border: none; padding: 20px 60px; border-radius: 50px; cursor: pointer; font-size: 28px; font-weight: bold; box-shadow: 0 0 30px #f00; transition: 0.3s; z-index: 100; position: relative; }
+        button:hover { transform: scale(1.1); background: #ff3333; }
+        .heart { position: absolute; bottom: -50px; background: red; width: 15px; height: 15px; transform: rotate(45deg); animation: moveUp 5s linear infinite; z-index: 1; }
+        .heart::before, .heart::after { content: ''; position: absolute; width: 15px; height: 15px; background: red; border-radius: 50%; }
+        .heart::before { top: -8px; left: 0; } .heart::after { left: -8px; top: 0; }
+        @keyframes moveUp { 0% { transform: translateY(0) rotate(45deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(-110vh) rotate(45deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <h1>Welcome my sweet Jojo</h1>
+        <button id="btn" onclick="startSurprise()">اضغطي هنا يا حلوة ❤️</button>
+        <div id="lyrics"></div>
+    </div>
+
+    <audio id="audio1" src="song.mp3.mp3"></audio>
+    <audio id="audio2" src="song.mp3"></audio>
+    <audio id="audio3" src="track.mp3"></audio>
+
+    <script>
+        const lines = [
+            {t: 1.5, m: "You're my Honeybunch"}, {t: 3.5, m: "Sugarplum"},
+            {t: 5.2, m: "Pumpy-umpy-umpkin"}, {t: 7.8, m: "You're my Sweetie Pie"},
+            {t: 10.2, m: "You're my Cuppycake"}, {t: 12.0, m: "Gumdrop"},
+            {t: 13.8, m: "Snoogums-boogums"}, {t: 15.5, m: "You're the apple of my eye"},
+            {t: 19.5, m: "And I love you so... ❤️"}
+        ];
+
+        function startSurprise() {
+            document.getElementById('btn').style.display = 'none';
+            const a1 = document.getElementById('audio1');
+            const a2 = document.getElementById('audio2');
+            const a3 = document.getElementById('audio3');
+            const ly = document.getElementById('lyrics');
+
+            // محاولة تشغيل كل الملفات الممكنة
+            const playAudio = () => {
+                a1.play().catch(() => {
+                    a2.play().catch(() => {
+                        a3.play().catch(() => console.log("All audio sources failed"));
+                    });
+                });
+            };
+
+            playAudio();
+
+            let startTime = Date.now();
+            setInterval(() => {
+                let elapsed = (Date.now() - startTime) / 1000;
+                let currentLine = lines.find((x, i) => elapsed >= x.t && (!lines[i+1] || elapsed < lines[i+1].t));
+                if (currentLine) ly.innerText = currentLine.m;
+            }, 100);
+        }
+
+        // إطلاق القلوب
+        setInterval(() => {
+            const h = document.createElement('div'); h.className = 'heart';
+            h.style.left = Math.random() * 100 + "vw";
+            h.style.animationDuration = (Math.random() * 2 + 3) + "s";
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 5000);
+        }, 150);
+    </script>
+</body>
+</html>
